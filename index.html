@@ -24,130 +24,170 @@ let gameState = {
     step: 0,
     confidence: 0,
     number: false,
-    personality: ""
+    personality: "",
+    dateTime: "",
+    datePlace: ""
 };
 
 const output = document.getElementById("output");
 const choicesDiv = document.getElementById("choices");
 
 function startGame() {
-    gameState.step = "choosePersonality";
-    gameState.confidence = 0;
-    gameState.number = false;
+    gameState = { step: "choosePersonality", confidence: 0, number: false, personality: "", dateTime: "", datePlace: "" };
     showScene();
 }
 
 function showScene() {
     choicesDiv.innerHTML = "";
 
+    // Step: choose girl
     if(gameState.step === "choosePersonality") {
         output.textContent = "Choose a girl to approach:";
         createChoices([
             ["Casual Coffee Chick", () => {gameState.personality="Casual"; gameState.step=1; showScene();}],
             ["Goth Girl", () => {gameState.personality="Goth"; gameState.step=1; showScene();}],
-            ["Sporty Girl", () => {gameState.personality="Sporty"; gameState.step=1; showScene();}]
+            ["Sporty Girl", () => {gameState.personality="Sporty"; gameState.step=1; showScene();}],
+            ["Bookish Girl", () => {gameState.personality="Bookish"; gameState.step=1; showScene();}],
+            ["Artsy Girl", () => {gameState.personality="Artsy"; gameState.step=1; showScene();}],
+            ["Tech-savvy Girl", () => {gameState.personality="Tech"; gameState.step=1; showScene();}]
         ]);
     }
+
+    // Step: initial approach
     else if(gameState.step === 1) {
-        let intro = {
+        const intro = {
             "Casual": "You see a friendly girl at the coffee shop. She smiles as she sips her latte.",
             "Goth": "A mysterious goth girl sits alone in the corner, headphones in. She notices you looking.",
-            "Sporty": "A sporty girl in running gear stretches by the cafe window, energetic and alert."
+            "Sporty": "A sporty girl stretches by the cafe window, energetic and alert.",
+            "Bookish": "A girl is reading a thick book, glasses perched on her nose.",
+            "Artsy": "A girl is sketching in her notebook, surrounded by colorful art supplies.",
+            "Tech": "A girl is typing away on a laptop, wearing earbuds, focused."
         };
         output.textContent = intro[gameState.personality] + " How do you approach?";
         createChoices([
+            ["Say hello and introduce yourself", 2],
             ["Compliment her outfit politely", 2],
             ["Ask for the time", 4],
-            ["Comment on something around you (book, decor, music)", 2],
-            ["Say hello and introduce yourself", 2]
+            ["Comment on the book or item she’s holding", 2],
+            ["Mention something about the cafe atmosphere or music", 2],
+            ["Ask if she comes here often", 2],
+            ["Make a small observation about the weather", 2],
+            ["Smile and wave casually", 2]
         ]);
     }
+
+    // Step: continue conversation
     else if(gameState.step === 2) {
-        let dialog = {
+        const dialog = {
             "Casual": "She smiles slightly. She seems open to conversation.",
             "Goth": "She raises an eyebrow, unimpressed. 'Uh, thanks, I guess.'",
-            "Sporty": "She grins. 'Thanks! I just came from the gym.'"
+            "Sporty": "She grins. 'Thanks! I just came from the gym.'",
+            "Bookish": "She looks up from her book. 'Oh, hi!'",
+            "Artsy": "She nods at your comment, curious.",
+            "Tech": "She glances up briefly. 'Yeah?'"
         };
         output.textContent = dialog[gameState.personality] + " What do you say next?";
         createChoices([
             ["Ask about her favorite coffee or drink", 6],
-            ["Ask what hobbies or interests she has", 6],
-            ["Comment on the music or atmosphere and ask her opinion", 6],
-            ["Share a small, funny story about your day", 7]
+            ["Ask about hobbies or interests", 6],
+            ["Comment on music or atmosphere and ask her opinion", 6],
+            ["Share a small, funny story about your day", 7],
+            ["Ask about books, shows, or media she likes", 6],
+            ["Mention a recent event or news and ask her thoughts", 6],
+            ["Talk about your work or study briefly and ask hers", 6],
+            ["Ask about any pets or animals she likes", 6]
         ]);
     }
-    else if(gameState.step === 3) {
-        let dialog = {
-            "Casual": "She frowns at the cheesy line. Tough start.",
-            "Goth": "She rolls her eyes. 'Seriously? Really?'",
-            "Sporty": "She chuckles awkwardly. Not the best first impression."
-        };
-        output.textContent = dialog[gameState.personality];
-        createChoices([
-            ["Apologize and try again politely", 2],
-            ["Leave", 5],
-            ["Explain you were joking", 6],
-            ["Shift to a neutral topic (book, cafe, hobby)", 6]
-        ]);
+
+    else if(gameState.step === 3) { // wrong choice previously
+        output.textContent = "She seems annoyed. Game over.";
+        createChoices([["Restart", startGame]]);
     }
-    else if(gameState.step === 4) {
-        let dialog = {
-            "Casual": "Neutral start. She tells you the time and goes back to her book.",
-            "Goth": "She tells you the time in a monotone, unimpressed.",
-            "Sporty": "She tells you the time, still stretching."
-        };
-        output.textContent = dialog[gameState.personality] + " What do you do?";
+
+    else if(gameState.step === 4) { // neutral start
+        output.textContent = "Neutral start. She tells you the time and goes back to her activity.";
         createChoices([
             ["Ask about her drink or food choice", 6],
             ["Make small talk about surroundings", 6],
             ["Ask about hobbies or recent activities", 6],
-            ["Smile and politely excuse yourself", 5]
+            ["Smile and politely excuse yourself", 5],
+            ["Comment on the weather or day", 6],
+            ["Ask if she’s working or studying today", 6]
         ]);
     }
+
     else if(gameState.step === 5) {
         output.textContent = "You walked away. Game over.";
         createChoices([["Restart", startGame]]);
     }
+
+    // Step: trying to get the number
     else if(gameState.step === 6) {
         output.textContent = "The conversation is going well. Try to get her number?";
         createChoices([
             ["Directly ask for her number politely", attemptNumber],
             ["Offer your number and say she can text anytime", attemptNumber],
             ["Suggest continuing the conversation over coffee another time", attemptNumber],
-            ["Keep chatting for a few more minutes", 7]
+            ["Keep chatting for a few more minutes", 7],
+            ["Mention an event or activity she might enjoy and invite her", attemptNumber],
+            ["Share an interesting article or topic and ask if she wants to discuss it later", attemptNumber]
         ]);
     }
+
     else if(gameState.step === 7) {
         output.textContent = "She seems hesitant. Your confidence can influence the outcome.";
         createChoices([
             ["Tell another funny or interesting story to build rapport", increaseConfidence],
             ["Ask about a topic she mentioned before", attemptNumber],
             ["Share a relatable experience to connect", attemptNumber],
-            ["Politely wrap up the conversation", 5]
+            ["Politely wrap up the conversation", 5],
+            ["Comment on something in her surroundings to keep dialogue light", attemptNumber]
         ]);
     }
-    else if(gameState.step === 8) {
-        output.textContent = "She looks annoyed. Game over.";
-        createChoices([["Restart", startGame]]);
-    }
+
+    // Step: suggesting or choosing time
     else if(gameState.step === "schedule") {
-        let scheduleHint = {
-            "Casual": "She suggests a time in the evening.",
-            "Goth": "She suggests a late evening, dark and quiet.",
-            "Sporty": "She prefers early afternoon or after a workout."
-        };
-        output.textContent = "You got the number! Now you need to arrange a date. " + scheduleHint[gameState.personality];
+        const suggestTime = ["Casual","Bookish","Artsy","Tech"];
+        const askUserTime = ["Goth","Sporty"];
+        if(suggestTime.includes(gameState.personality)) {
+            output.textContent = "She suggests a time for the date. Do you accept?";
+            createChoices([
+                ["Yes, that works for me", () => {gameState.dateTime="Her suggested time"; gameState.step="place"; showScene();}],
+                ["Suggest a different time", negotiateSchedule],
+                ["Ask what other time works for her", negotiateSchedule],
+                ["Ignore the message", "fail"]
+            ]);
+        } else if(askUserTime.includes(gameState.personality)) {
+            output.textContent = "She asks you to suggest a time. Which do you choose?";
+            createChoices([
+                ["10 AM", choosePlace],
+                ["2 PM", choosePlace],
+                ["6 PM", choosePlace],
+                ["8 PM", choosePlace],
+                ["I'm good with whatever", choosePlace]
+            ]);
+        }
+    }
+
+    // Step: choose place
+    else if(gameState.step === "place") {
+        output.textContent = "Now decide on a place for the date:";
         createChoices([
-            ["Accept immediately", "success"],
-            ["Suggest a different day", negotiateSchedule],
-            ["Ask what time works best", negotiateSchedule],
-            ["Ignore the message", "fail"]
+            ["Coffee shop", finishDate],
+            ["Casual restaurant", finishDate],
+            ["Park or outdoor location", finishDate],
+            ["Museum or gallery", finishDate],
+            ["Bookstore", finishDate],
+            ["Cafe with live music", finishDate]
         ]);
     }
+
+    // Step: success
     else if(gameState.step === "success") {
-        output.textContent = "You successfully set up a date! Congratulations!";
+        output.textContent = `You successfully set up a date at ${gameState.datePlace} at ${gameState.dateTime || 'the chosen time'}! Congratulations!`;
         createChoices([["Play again", startGame]]);
     }
+
     else if(gameState.step === "fail") {
         output.textContent = "She lost interest. Game over.";
         createChoices([["Restart", startGame]]);
@@ -176,6 +216,9 @@ function attemptNumber() {
         case "Casual": baseChance = 45; break;
         case "Goth": baseChance = 20; break;
         case "Sporty": baseChance = 40; break;
+        case "Bookish": baseChance = 35; break;
+        case "Artsy": baseChance = 30; break;
+        case "Tech": baseChance = 40; break;
     }
     let chance = baseChance + gameState.confidence;
     if(Math.random()*100 < chance) gameState.step="schedule";
@@ -195,10 +238,24 @@ function negotiateSchedule() {
         case "Casual": baseChance = 50; break;
         case "Goth": baseChance = 30; break;
         case "Sporty": baseChance = 45; break;
+        case "Bookish": baseChance = 40; break;
+        case "Artsy": baseChance = 35; break;
+        case "Tech": baseChance = 45; break;
     }
     let chance = baseChance + gameState.confidence;
-    if(Math.random()*100 < chance) gameState.step="success";
+    if(Math.random()*100 < chance) gameState.step="place";
     else gameState.step="fail";
+    showScene();
+}
+
+function choosePlace() {
+    gameState.step="place";
+    showScene();
+}
+
+function finishDate(choice) {
+    gameState.datePlace = choice ? choice : event.target.textContent;
+    gameState.step="success";
     showScene();
 }
 
