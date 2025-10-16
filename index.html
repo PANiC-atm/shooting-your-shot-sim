@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hard Text-Based Dating Game: Multiple Personalities</title>
+<title>Confidence Builder Dating Game</title>
 <style>
   body { font-family: Arial, sans-serif; background: #111; color: #eee; padding: 20px; }
   #game { max-width: 700px; margin: auto; }
@@ -57,9 +57,9 @@ function showScene() {
         output.textContent = intro[gameState.personality] + " How do you approach?";
         createChoices([
             ["Compliment her outfit politely", 2],
-            ["Try a cheesy pick-up line", 3],
             ["Ask for the time", 4],
-            ["Ignore her and walk away", 5]
+            ["Comment on something around you (book, decor, music)", 2],
+            ["Say hello and introduce yourself", 2]
         ]);
     }
     else if(gameState.step === 2) {
@@ -70,10 +70,10 @@ function showScene() {
         };
         output.textContent = dialog[gameState.personality] + " What do you say next?";
         createChoices([
-            ["Ask about her favorite coffee", 6],
-            ["Comment on the weather", 6],
-            ["Talk about your work briefly", 6],
-            ["Try to flirt subtly", 7]
+            ["Ask about her favorite coffee or drink", 6],
+            ["Ask what hobbies or interests she has", 6],
+            ["Comment on the music or atmosphere and ask her opinion", 6],
+            ["Share a small, funny story about your day", 7]
         ]);
     }
     else if(gameState.step === 3) {
@@ -84,10 +84,10 @@ function showScene() {
         };
         output.textContent = dialog[gameState.personality];
         createChoices([
-            ["Apologize and try again", 2],
+            ["Apologize and try again politely", 2],
             ["Leave", 5],
-            ["Pretend it was a joke", 6],
-            ["Keep going with more cheesy lines", 8]
+            ["Explain you were joking", 6],
+            ["Shift to a neutral topic (book, cafe, hobby)", 6]
         ]);
     }
     else if(gameState.step === 4) {
@@ -98,10 +98,10 @@ function showScene() {
         };
         output.textContent = dialog[gameState.personality] + " What do you do?";
         createChoices([
+            ["Ask about her drink or food choice", 6],
             ["Make small talk about surroundings", 6],
-            ["Ask about coffee", 6],
-            ["Comment on the cafe ambience", 6],
-            ["Smile and leave", 5]
+            ["Ask about hobbies or recent activities", 6],
+            ["Smile and politely excuse yourself", 5]
         ]);
     }
     else if(gameState.step === 5) {
@@ -109,25 +109,25 @@ function showScene() {
         createChoices([["Restart", startGame]]);
     }
     else if(gameState.step === 6) {
-        output.textContent = "You chat casually. Try to get her number?";
+        output.textContent = "The conversation is going well. Try to get her number?";
         createChoices([
-            ["Directly ask for her number", attemptNumber],
-            ["Keep talking", 7],
-            ["Make a joke and ask indirectly", attemptNumber],
-            ["Offer your number instead", attemptNumber]
+            ["Directly ask for her number politely", attemptNumber],
+            ["Offer your number and say she can text anytime", attemptNumber],
+            ["Suggest continuing the conversation over coffee another time", attemptNumber],
+            ["Keep chatting for a few more minutes", 7]
         ]);
     }
     else if(gameState.step === 7) {
-        output.textContent = "She's hesitant. Your confidence may influence the outcome.";
+        output.textContent = "She seems hesitant. Your confidence can influence the outcome.";
         createChoices([
-            ["Increase confidence by telling a funny story", increaseConfidence],
-            ["Keep subtle flirting", attemptNumber],
-            ["Shift topic to shared interests", attemptNumber],
-            ["Walk away politely", 5]
+            ["Tell another funny or interesting story to build rapport", increaseConfidence],
+            ["Ask about a topic she mentioned before", attemptNumber],
+            ["Share a relatable experience to connect", attemptNumber],
+            ["Politely wrap up the conversation", 5]
         ]);
     }
     else if(gameState.step === 8) {
-        output.textContent = "She looks annoyed at the constant cheesy lines. Game over.";
+        output.textContent = "She looks annoyed. Game over.";
         createChoices([["Restart", startGame]]);
     }
     else if(gameState.step === "schedule") {
@@ -173,9 +173,9 @@ function createChoices(options) {
 function attemptNumber() {
     let baseChance = 0;
     switch(gameState.personality){
-        case "Casual": baseChance = 40; break;
-        case "Goth": baseChance = 15; break;
-        case "Sporty": baseChance = 35; break;
+        case "Casual": baseChance = 45; break;
+        case "Goth": baseChance = 20; break;
+        case "Sporty": baseChance = 40; break;
     }
     let chance = baseChance + gameState.confidence;
     if(Math.random()*100 < chance) gameState.step="schedule";
