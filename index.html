@@ -1,275 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Approach Game</title>
-<style>
-    body { 
-        background: #111;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        text-align: center;
-        padding: 20px;
+  <meta charset="UTF-8">
+  <title>Shoot Your Shot Sim</title>
+  <style>
+    body {
+      background: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 20px;
     }
     #game {
-        max-width: 800px;
-        margin: 0 auto;
-        background: #222;
-        padding: 20px;
-        border-radius: 10px;
+      max-width: 600px;
+      margin: auto;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
     }
     .choice {
-        display: block;
-        background: #333;
-        color: #fff;
-        margin: 10px auto;
-        padding: 10px;
-        width: 80%;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        text-align: left;
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: #2e2e2e;
+      border: none;
+      color: white;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.2s;
     }
     .choice:hover {
-        background: #444;
+      background: #444;
     }
-    h1 {
-        margin-bottom: 10px;
+    #startBtn {
+      padding: 10px 15px;
+      background: #444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
     }
-</style>
+  </style>
 </head>
 <body>
-<div id="game">
+  <div id="game">
     <h1> </h1>
-    <p id="output">Choose someone to talk to:</p>
+    <div id="text"></div>
     <div id="choices"></div>
-</div>
+    <button id="startBtn" onclick="startGame()">Start</button>
+  </div>
 
-<script>
-// Personality roster
-const girls = [
-    { id: 1, name: "Casual" },
-    { id: 2, name: "Goth" },
-    { id: 3, name: "Sporty" },
-    { id: 4, name: "Bookish" },
-    { id: 5, name: "Artsy" },
-    { id: 6, name: "Tech-Savvy" },
-    { id: 7, name: "E-Girl" }
-];
+  <script>
+    let girl = null;
+    let conversationProgress = 0;
 
-const output = document.getElementById('output');
-const choicesDiv = document.getElementById('choices');
-let currentGirl = null;
+    const girls = [
+      { id: 1, name: "Casual" },
+      { id: 2, name: "Goth" },
+      { id: 3, name: "Sporty" },
+      { id: 4, name: "Bookish" },
+      { id: 5, name: "Artsy" },
+      { id: 6, name: "Tech-Savvy" },
+      { id: 7, name: "E-Girl" }
+    ];
 
-// Initial girl select
-function showGirlSelection() {
-    output.textContent = "Who are you approaching?";
-    choicesDiv.innerHTML = "";
-    girls.forEach(g => {
-        const btn = document.createElement("button");
-        btn.className = "choice";
-        btn.textContent = g.name;
-        btn.onclick = () => startConversation(g.id);
+    function startGame() {
+      document.getElementById('startBtn').style.display = 'none';
+      selectGirl();
+    }
+
+    function selectGirl() {
+      document.getElementById('text').innerText = "You spot someone interesting. Who will you approach?";
+      const choicesDiv = document.getElementById('choices');
+      choicesDiv.innerHTML = '';
+      girls.forEach(g => {
+        const btn = document.createElement('button');
+        btn.className = 'choice';
+        btn.innerText = g.name;
+        btn.onclick = () => {
+          girl = g.id;
+          conversationProgress = 0;
+          firstInteraction();
+        };
         choicesDiv.appendChild(btn);
-    });
-}
-
-function startConversation(girlID) {
-    currentGirl = girlID;
-    output.textContent = `You approach the ${girls.find(g=>g.id===girlID).name} girl. What do you do?`;
-    showChoices(girlID, 1);
-}
-
-// Core branching logic
-function handleChoice(girlID, choiceID) {
-    const g = girls.find(g=>g.id===girlID).name;
-    let text = "";
-    let nextStart = null;
-
-    // --- CASUAL GIRL ---
-    if (girlID === 1) {
-        if (choiceID === 1) { text = "She smiles warmly — easygoing vibe."; nextStart = 9; }
-        else if (choiceID === 2) { text = "She laughs at your joke."; nextStart = 9; }
-        else if (choiceID === 9) { text = "She leans in a little — seems comfy talking."; nextStart = 17; }
-        else if (choiceID === 10) { text = "She shrugs playfully, clearly enjoying this."; nextStart = 17; }
-        else if (choiceID === 17) { text = "She gives you her number casually."; return showScheduleOptions(); }
-        else if (choiceID === 18) { text = "She teases you before agreeing to share her number."; return showScheduleOptions(); }
+      });
     }
 
-    // --- GOTH GIRL ---
-    if (girlID === 2) {
-        if (choiceID === 1) { text = "She nods, intrigued by your confidence."; nextStart = 9; }
-        else if (choiceID === 2) { text = "She raises a brow — not impressed, but listening."; nextStart = 9; }
-        else if (choiceID === 9) { text = "She smirks faintly, folding her arms."; nextStart = 17; }
-        else if (choiceID === 10) { text = "She tilts her head, clearly sizing you up."; nextStart = 17; }
-        else if (choiceID === 17) { text = "She slides her number across her phone screen to you."; return showScheduleOptions(); }
-        else if (choiceID === 18) { text = "She reluctantly gives her number after a small debate."; return showScheduleOptions(); }
+    function firstInteraction() {
+      document.getElementById('text').innerText = `You approach the ${girls.find(g => g.id === girl).name} girl. What do you say first?`;
+      setChoices([
+        "Smile and say 'Hey, how’s your day going?'",
+        "Compliment her outfit — 'You’ve got a really cool style.'",
+        "Ask what she’s up to — 'You just hanging out here?'",
+        "Crack a light joke to break the ice.",
+        "Comment on the weather — 'This kind of day feels perfect to just be outside.'",
+        "Mention something in the environment — 'The music here’s actually kinda nice, right?'",
+        "Ask if she comes here often — 'You around here a lot?'",
+        "Notice something she’s doing and ask about it — 'That looks interesting, what is it?'"
+      ]);
     }
 
-    // --- SPORTY GIRL ---
-    if (girlID === 3) {
-        if (choiceID === 1) { text = "She laughs — competitive energy already."; nextStart = 9; }
-        else if (choiceID === 2) { text = "She nods like she respects the hustle."; nextStart = 9; }
-        else if (choiceID === 9) { text = "She flexes a little jokingly."; nextStart = 17; }
-        else if (choiceID === 10) { text = "She talks about her next match."; nextStart = 17; }
-        else if (choiceID === 17) { text = "She tosses you her number like it's nothing."; return showScheduleOptions(); }
-        else if (choiceID === 18) { text = "She pretends to hesitate, then grins and gives it."; return showScheduleOptions(); }
-    }
-
-    // --- BOOKISH GIRL ---
-    if (girlID === 4) {
-        if (choiceID === 1) { text = "She pushes her glasses up and listens carefully."; nextStart = 9; }
-        else if (choiceID === 2) { text = "She gives a shy smile."; nextStart = 9; }
-        else if (choiceID === 9) { text = "She quotes a book line at you."; nextStart = 17; }
-        else if (choiceID === 10) { text = "She actually seems engaged."; nextStart = 17; }
-        else if (choiceID === 17) { text = "She nervously gives you her number."; return showScheduleOptions(); }
-        else if (choiceID === 18) { text = "She hands you a sticky note with her digits."; return showScheduleOptions(); }
-    }
-
-    // --- ARTSY GIRL ---
-    if (girlID === 5) {
-        if (choiceID === 1) { text = "She twirls a paintbrush like a baton."; nextStart = 9; }
-        else if (choiceID === 2) { text = "She sketches you with her eyes — probably drawing you later."; nextStart = 9; }
-        else if (choiceID === 9) { text = "She starts talking about her favorite mediums."; nextStart = 17; }
-        else if (choiceID === 10) { text = "She hums softly — clearly vibing."; nextStart = 17; }
-        else if (choiceID === 17) { text = "She gives you her number in a doodled heart."; return showScheduleOptions(); }
-        else if (choiceID === 18) { text = "She draws your number request into a cartoon, then says yes."; return showScheduleOptions(); }
-    }
-
-    // --- TECH-SAVVY GIRL ---
-    if (girlID === 6) {
-        if (choiceID === 1) { text = "She nods analytically — like she's scanning your specs."; nextStart = 9; }
-        else if (choiceID === 2) { text = "She laughs awkwardly, but doesn’t run."; nextStart = 9; }
-        else if (choiceID === 9) { text = "She mentions a favorite game engine."; nextStart = 17; }
-        else if (choiceID === 10) { text = "She starts nerding out."; nextStart = 17; }
-        else if (choiceID === 17) { text = "She gives you her Discord first, then number."; return showScheduleOptions(); }
-        else if (choiceID === 18) { text = "She DM’s you mid-convo with her number."; return showScheduleOptions(); }
-    }
-
-    // --- E-GIRL ---
-    if (girlID === 7) {
-        if (choiceID === 1) { text = "She gives you a mischievous grin."; nextStart = 9; }
-        else if (choiceID === 2) { text = "She mimics your tone back, giggling."; nextStart = 9; }
-        else if (choiceID === 9) { text = "She talks about a weird meme."; nextStart = 17; }
-        else if (choiceID === 10) { text = "She admits she games too much."; nextStart = 17; }
-        else if (choiceID === 17) { text = "She gives you her number with a weirdly specific pet name."; return showScheduleOptions(); }
-        else if (choiceID === 18) { text = "She just blurts out her number and laughs."; return showScheduleOptions(); }
-    }
-
-    if (text) {
-        output.textContent = text;
-        if (nextStart) showChoices(girlID, nextStart);
-    }
-}
-
-// Choice bank
-function showChoices(girlID, startChoice) {
-    choicesDiv.innerHTML = "";
-    let labels = [];
-
-    // initial layer (1-8)
-    if (startChoice === 1) {
-        labels = [
-            "Say something funny",
-            "Compliment her",
-            "Ask a casual question",
-            "Make an observation",
-            "Comment on something nearby",
-            "Be direct",
-            "Ask how her day’s going",
-            "Say hi confidently"
-        ];
-        labels.forEach((lbl,i)=>{
-            const btn = document.createElement("button");
-            btn.className = "choice";
-            btn.textContent = lbl;
-            btn.onclick = ()=>handleChoice(girlID, i+1);
-            choicesDiv.appendChild(btn);
-        });
-    }
-
-    // second layer (9-16)
-    if (startChoice === 9) {
-        labels = [
-            "Follow up on something she said",
-            "Make a small joke",
-            "Ask about hobbies",
-            "Share something personal",
-            "Flatter her outfit",
-            "Talk about something random",
-            "Ask an open question",
-            "Light tease (friendly)"
-        ];
-        labels.forEach((lbl,i)=>{
-            const btn = document.createElement("button");
-            btn.className = "choice";
-            btn.textContent = lbl;
-            btn.onclick = ()=>handleChoice(girlID, i+9);
-            choicesDiv.appendChild(btn);
-        });
-    }
-
-    // third layer (17-24)
-    if (startChoice === 17) {
-        labels = [
-            "Ask for her number confidently",
-            "Joke your way into the number",
-            "Mention hanging out sometime",
-            "Say you'd like to see her again",
-            "Propose an activity",
-            "Be playful",
-            "Ask chill",
-            "Smile and ask"
-        ];
-        labels.forEach((lbl,i)=>{
-            const btn = document.createElement("button");
-            btn.className = "choice";
-            btn.textContent = lbl;
-            btn.onclick = ()=>handleChoice(girlID, i+17);
-            choicesDiv.appendChild(btn);
-        });
-    }
-}
-
-// Schedule picking
-function showScheduleOptions() {
-    output.textContent = "She agrees! When do you want to meet up?";
-    choicesDiv.innerHTML = "";
-    const times = ["Friday night", "Saturday afternoon", "Sunday evening", "I'm good with whatever"];
-    times.forEach(t=>{
-        const btn = document.createElement("button");
-        btn.className = "choice";
-        btn.textContent = t;
-        btn.onclick = ()=>showLocationOptions(t);
+    function setChoices(choiceArray) {
+      const choicesDiv = document.getElementById('choices');
+      choicesDiv.innerHTML = '';
+      choiceArray.forEach((text, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice';
+        btn.innerText = text;
+        btn.onclick = () => handleChoice(index + 1);
         choicesDiv.appendChild(btn);
-    });
-}
+      });
 
-// Location picking
-function showLocationOptions(time) {
-    output.textContent = `Nice, ${time} works. Where are you taking her?`;
-    choicesDiv.innerHTML = "";
-    const places = ["Coffee shop", "Park walk", "Arcade", "Dinner spot", "Bookstore", "Gallery", "Surprise plan"];
-    places.forEach(p=>{
-        const btn = document.createElement("button");
-        btn.className = "choice";
-        btn.textContent = p;
-        btn.onclick = ()=>endGame(p, time);
-        choicesDiv.appendChild(btn);
-    });
-}
+      // Universal option to ask for number
+      const askNumber = document.createElement('button');
+      askNumber.className = 'choice';
+      askNumber.innerText = "Ask for her number";
+      askNumber.onclick = () => askForNumber();
+      choicesDiv.appendChild(askNumber);
+    }
 
-function endGame(place, time) {
-    output.textContent = `She smiles and agrees to meet you at the ${place} on ${time}. Mission accomplished.`;
-    choicesDiv.innerHTML = "";
-    const restart = document.createElement("button");
-    restart.className = "choice";
-    restart.textContent = "Play Again";
-    restart.onclick = showGirlSelection;
-    choicesDiv.appendChild(restart);
-}
+    function handleChoice(choice) {
+      conversationProgress++;
+      
+      // ==============================
+      // CASUAL
+      if (girl === 1 && choice === 1) {
+        // Casual
+      }
+      if (girl === 1 && choice === 2) {
+        // Casual
+      }
+      // ...repeat for however many choices you want for Casual
 
-showGirlSelection();
-</script>
+      // ==============================
+      // GOTH
+      if (girl === 2 && choice === 1) {
+        // Goth
+      }
+      if (girl === 2 && choice === 2) {
+        // Goth
+      }
+
+      // ==============================
+      // SPORTY
+      if (girl === 3 && choice === 1) {
+        // Sporty
+      }
+
+      // ==============================
+      // BOOKISH
+      if (girl === 4 && choice === 1) {
+        // Bookish
+      }
+
+      // ==============================
+      // ARTSY
+      if (girl === 5 && choice === 1) {
+        // Artsy
+      }
+
+      // ==============================
+      // TECH-SAVVY
+      if (girl === 6 && choice === 1) {
+        // Tech-Savvy
+      }
+
+      // ==============================
+      // E-GIRL
+      if (girl === 7 && choice === 1) {
+        // E-Girl
+      }
+
+      // Default placeholder outcome text
+      document.getElementById('text').innerText = `Outcome for Girl ${girl}, Choice ${choice} (insert dialogue and follow-up here)`;
+      
+      // Example of realistic follow-up choices
+      setChoices([
+        "Laugh and add something personal",
+        "Ask her about her weekend plans",
+        "Tell a short story about something funny that happened to you",
+        "Give her another compliment",
+        "Ask what kind of music she’s into",
+        "Offer to grab a coffee together sometime",
+        "React playfully to what she says",
+        "Gently tease her to build rapport"
+      ]);
+    }
+
+    function askForNumber() {
+      if (conversationProgress < 2) {
+        document.getElementById('text').innerText = "She looks a little surprised — might be too soon to ask.";
+      } else {
+        document.getElementById('text').innerText = "She thinks it over...";
+        setTimeout(() => {
+          document.getElementById('text').innerText = "She gives you her number! Now figure out when to meet.";
+          scheduleStep();
+        }, 1000);
+      }
+    }
+
+    function scheduleStep() {
+      setChoices([
+        "Tomorrow afternoon",
+        "Tomorrow night",
+        "This weekend",
+        "Next week",
+        "I'm good with whatever."
+      ]);
+    }
+
+  </script>
 </body>
 </html>
