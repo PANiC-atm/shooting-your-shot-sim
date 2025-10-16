@@ -126,136 +126,111 @@
       // ==============================
       // CASUAL
       if (girl === 1 && choice === 1) {
-        // ==============================
-// CASUAL GIRL OUTCOMES & CHOICES
-// ==============================
+        # =======================
+# CASUAL GIRL CONVERSATION TREE
+# =======================
 
-if (girl === 1 && choice === 1) {
-  // Smile and say 'Hey, how’s your day going?'
-  document.getElementById('text').innerText =
-    "She smiles back casually. 'Hey, not bad. Just chilling, you?' Her body language is relaxed.";
-  setChoices([
-    "Say 'Same, just enjoying the day.'",
-    "Ask her what she's been up to today.",
-    "Make a light joke about how chill it is.",
-    "Ask if she comes here often.",
-    "Comment on how nice the vibe is here.",
-    "Ask about her weekend plans.",
-    "Mention something random about the environment.",
-    "Compliment her smile."
-  ]);
-}
+if girl == "Casual":
+    print("She leans against a locker with a relaxed smile. She’s wearing ripped jeans, sneakers, and a hoodie. She doesn’t look too fazed by your approach.")
+    print("She glances at you with a lazy smirk: 'Yo. You lost or something?'")
 
-if (girl === 1 && choice === 2) {
-  // Compliment her outfit
-  document.getElementById('text').innerText =
-    "She looks down at her outfit and laughs softly. 'Oh thanks, I just threw this on.' She seems flattered.";
-  setChoices([
-    "Say 'Well, it works. You’ve got good taste.'",
-    "Ask where she got it from.",
-    "Make a lighthearted joke about your own outfit.",
-    "Ask if she’s into fashion.",
-    "Say something playful about matching styles.",
-    "Ask what her favorite kind of outfit is.",
-    "Switch topics to something fun.",
-    "Ask if she likes going out shopping."
-  ]);
-}
+    choices = [
+        "Crack a light joke to match her energy.",
+        "Compliment her outfit — 'You’ve got chill style, I like it.'",
+        "Act overly formal and polite.",
+        "Bluntly ask for her number."
+    ]
 
-if (girl === 1 && choice === 3) {
-  // Ask what she's up to
-  document.getElementById('text').innerText =
-    "She shrugs with an easy smile. 'Just hanging out, honestly. Needed a break.' She’s clearly relaxed.";
-  setChoices([
-    "Say 'Yeah I get that, same here.'",
-    "Ask what she does to relax.",
-    "Make a relatable comment about needing a break.",
-    "Ask if she comes here often.",
-    "Offer a small funny story about your own day.",
-    "Ask if she likes this place.",
-    "Make a chill comment about the vibe.",
-    "Compliment her calm energy."
-  ]);
-}
+    # =======================
+    # OUTCOME 1 — Light joke
+    # =======================
+    if choice == 1:
+        print("You crack a casual joke. She raises an eyebrow, then lets out a short laugh. 'Okay, that wasn’t terrible. You’re not too uptight, huh?' She shifts her weight, looking a bit more open.")
+        choices = [
+            "Keep the playful banter going — 'Depends how much trouble you get me into.'",
+            "Ask about her hoodie — 'That hoodie looks comfy as hell.'",
+            "Say something slightly awkward — 'I practiced that joke in the mirror.'",
+            "Ask for her number."
+        ]
 
-if (girl === 1 && choice === 4) {
-  // Crack a light joke
-  document.getElementById('text').innerText =
-    "She laughs — not over the top, but genuinely. 'Okay that was kinda funny.' She seems a bit more engaged.";
-  setChoices([
-    "Follow up with another joke.",
-    "Say 'Glad someone appreciates my terrible humor.'",
-    "Ask her if she’s usually this easy to make laugh.",
-    "Ask what kind of humor she likes.",
-    "Keep the conversation playful.",
-    "Ask what her favorite comedy movie or show is.",
-    "Make a funny observation about your surroundings.",
-    "Tell a short funny story."
-  ]);
-}
+        # OUTCOME 1.1 — Banter continues
+        if choice == 1.1:
+            print("She laughs a little harder this time. 'Bold of you to assume I won’t.' Her tone is teasing but friendly. She’s clearly vibing with your energy.")
+            choices = [
+                "Match her teasing — 'Then I guess I’m doomed.'",
+                "Switch topics — 'So what do you usually do around here?'",
+                "Say something cocky — 'Yeah, people usually like me.'",
+                "Ask for her number."
+            ]
 
-if (girl === 1 && choice === 5) {
-  // Comment on the weather
-  document.getElementById('text').innerText =
-    "She glances up at the sky with a half-smile. 'Yeah, it’s actually kinda nice out.' She seems open to chatting more.";
-  setChoices([
-    "Say 'Perfect day to just relax.'",
-    "Ask if she likes this kind of weather.",
-    "Make a small joke about the weather changing fast.",
-    "Ask if she goes on walks often.",
-    "Say something a little more personal.",
-    "Ask if she’s from around here.",
-    "Comment on how peaceful the moment is.",
-    "Bring up weekend plans."
-  ]);
-}
+        # OUTCOME 1.2 — Compliment hoodie
+        if choice == 1.2:
+            print("She looks down at her hoodie and shrugs. 'Yeah, it’s kinda my favorite. Not much of a fashionista, but comfort’s king.' She seems chill, neutral.")
+            choices = [
+                "Lightly tease her — 'So you’re the hoodie queen?'",
+                "Ask her where she got it.",
+                "Make a weird comment — 'You’d look better in red though.' (slightly offputting)",
+                "Ask for her number."
+            ]
 
-if (girl === 1 && choice === 6) {
-  // Mention something in the environment
-  document.getElementById('text').innerText =
-    "She looks around and nods. 'Yeah, it’s pretty chill here. I like it.' Her posture loosens a bit.";
-  setChoices([
-    "Say 'Yeah, it’s got a good vibe.'",
-    "Ask if she comes here a lot.",
-    "Comment on the people around.",
-    "Make a fun observation to keep it light.",
-    "Ask her what kind of places she likes to hang out at.",
-    "Bring up something you like about the place.",
-    "Ask if she lives nearby.",
-    "Offer to grab a drink or snack together."
-  ]);
-}
+        # OUTCOME 1.3 — Awkward comment
+        if choice == 1.3:
+            print("She snorts. 'Dude, what? That’s kinda weird.' She crosses her arms, less amused now.")
+            choices = [
+                "Recover with a self-aware joke.",
+                "Apologize honestly.",
+                "Double down and make it worse (rude).",
+                "Ask for her number. (She’ll likely reject you.)"
+            ]
 
-if (girl === 1 && choice === 7) {
-  // Ask if she comes here often
-  document.getElementById('text').innerText =
-    "She gives a small laugh. 'Not the smoothest line, but yeah sometimes.' She’s amused, not turned off.";
-  setChoices([
-    "Laugh it off and say 'Yeah I know, classic line.'",
-    "Ask what she usually does here.",
-    "Make a lighthearted follow-up.",
-    "Playfully tease yourself.",
-    "Say something genuine about just wanting to talk.",
-    "Ask if she likes the place.",
-    "Shift to asking about her interests.",
-    "Bring up a funny story about why you're here."
-  ]);
-}
+    # =======================
+    # OUTCOME 2 — Outfit compliment
+    # =======================
+    if choice == 2:
+        print("She glances down at her outfit and gives a little grin. 'Oh? Thanks. Not really tryin’, but I’ll take it.' She looks at you with slightly more interest.")
+        choices = [
+            "Play it cool — 'Yeah, chill fits are underrated.'",
+            "Tease lightly — 'Wow, not trying and still pulling it off?'",
+            "Over-compliment her — 'You’d look good in literally anything.' (too much, offputting)",
+            "Ask for her number."
+        ]
 
-if (girl === 1 && choice === 8) {
-  // Notice something she's doing
-  document.getElementById('text').innerText =
-    "She perks up a bit. 'Oh yeah, I was just messing around with this.' She seems more invested in the convo now.";
-  setChoices([
-    "Ask more about what she’s doing.",
-    "Say 'That’s actually pretty cool.'",
-    "Make a small, curious comment.",
-    "Ask how she got into it.",
-    "Share something you’re into.",
-    "Make a playful remark about it.",
-    "Offer a little joke to keep it light.",
-    "Ask if she does this often."
-  ]);
+    # =======================
+    # OUTCOME 3 — Too formal
+    # =======================
+    if choice == 3:
+        print("You straighten your posture and greet her politely. She blinks, then laughs a little too hard. 'Bro, why you sound like you’re meeting the president?' She clearly isn’t into it.")
+        choices = [
+            "Recover with humor.",
+            "Double down on formality.",
+            "Make fun of yourself lightly — 'Yeah okay that was weird.'",
+            "Ask for her number. (Chance of rejection.)"
+        ]
+
+    # =======================
+    # OUTCOME 4 — Ask for number immediately
+    # =======================
+    if choice == 4:
+        print("She tilts her head, surprised. 'Uh... dude, I don’t even know your name.' She laughs a little but it’s not warm. You came off too strong.")
+        choices = [
+            "Backtrack and joke it off.",
+            "Apologize and introduce yourself.",
+            "Say something cocky.",
+            "Double down and insist. (Very offputting)"
+        ]
+
+    # =======================
+    # FOLLOW-UP POSITIVE PATH
+    # =======================
+    if choice == "ask number after good impression":
+        print("She pauses, then smirks. 'Heh... sure, why not?' She types her number into your phone casually. 'Don’t make it weird though.'")
+
+    # =======================
+    # FOLLOW-UP NEGATIVE PATH
+    # =======================
+    if choice == "ask number too early or after offputting":
+        print("She frowns slightly and takes a step back. 'Yeah… no. Chill, man.' She’s clearly lost interest.")
+
 }
 
       }
