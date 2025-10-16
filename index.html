@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Realistic Confidence Builder Dating Game</title>
+<title>Realistic Dating Conversation Game</title>
 <style>
   body { font-family: Arial, sans-serif; background: #111; color: #eee; padding: 20px; }
   #game { max-width: 700px; margin: auto; }
@@ -21,10 +21,9 @@
 
 <script>
 let gameState = {
-    step: 0,
-    confidence: 0,
-    number: false,
+    step: "choosePersonality",
     personality: "",
+    number: false,
     dateTime: "",
     datePlace: ""
 };
@@ -33,28 +32,28 @@ const output = document.getElementById("output");
 const choicesDiv = document.getElementById("choices");
 
 function startGame() {
-    gameState = { step: "choosePersonality", confidence: 0, number: false, personality: "", dateTime: "", datePlace: "" };
+    gameState = { step: "choosePersonality", personality: "", number: false, dateTime: "", datePlace: "" };
     showScene();
 }
 
 function showScene() {
     choicesDiv.innerHTML = "";
 
-    // Step: choose girl
+    // Step 0: Choose girl
     if(gameState.step === "choosePersonality") {
         output.textContent = "Choose a girl to approach:";
         createChoices([
-            ["Casual Coffee Chick", () => {gameState.personality="Casual"; gameState.step=1; showScene();}],
-            ["Goth Girl", () => {gameState.personality="Goth"; gameState.step=1; showScene();}],
-            ["Sporty Girl", () => {gameState.personality="Sporty"; gameState.step=1; showScene();}],
-            ["Bookish Girl", () => {gameState.personality="Bookish"; gameState.step=1; showScene();}],
-            ["Artsy Girl", () => {gameState.personality="Artsy"; gameState.step=1; showScene();}],
-            ["Tech-savvy Girl", () => {gameState.personality="Tech"; gameState.step=1; showScene();}]
+            ["Casual Coffee Chick", () => {gameState.personality="Casual"; gameState.step="step1"; showScene();}],
+            ["Goth Girl", () => {gameState.personality="Goth"; gameState.step="step1"; showScene();}],
+            ["Sporty Girl", () => {gameState.personality="Sporty"; gameState.step="step1"; showScene();}],
+            ["Bookish Girl", () => {gameState.personality="Bookish"; gameState.step="step1"; showScene();}],
+            ["Artsy Girl", () => {gameState.personality="Artsy"; gameState.step="step1"; showScene();}],
+            ["Tech-savvy Girl", () => {gameState.personality="Tech"; gameState.step="step1"; showScene();}]
         ]);
     }
 
-    // Step: initial approach
-    else if(gameState.step === 1) {
+    // Step1: initial approach
+    else if(gameState.step === "step1") {
         const intro = {
             "Casual": "You see a friendly girl at the coffee shop. She smiles as she sips her latte.",
             "Goth": "A mysterious goth girl sits alone in the corner, headphones in. She notices you looking.",
@@ -63,59 +62,69 @@ function showScene() {
             "Artsy": "A girl is sketching in her notebook, surrounded by colorful art supplies.",
             "Tech": "A girl is typing away on a laptop, wearing earbuds, focused."
         };
-        output.textContent = intro[gameState.personality] + " How do you approach?";
+        output.textContent = intro[gameState.personality] + "\nHow do you approach her?";
         createChoices([
-            ["Say hello and introduce yourself", () => {uniqueOutcome("introGreet");}],
-            ["Compliment her outfit politely", () => {uniqueOutcome("outfit");}],
-            ["Ask for the time", () => {uniqueOutcome("time");}],
-            ["Comment on the book or item she’s holding", () => {uniqueOutcome("item");}],
-            ["Mention something about the cafe atmosphere or music", () => {uniqueOutcome("music");}],
-            ["Ask if she comes here often", () => {uniqueOutcome("frequent");}],
-            ["Make a small observation about the weather", () => {uniqueOutcome("weather");}],
-            ["Smile and wave casually", () => {uniqueOutcome("wave");}]
+            ["Say hello and introduce yourself", () => {gameState.step="step2"; showScene();}],
+            ["Compliment her outfit politely", () => {gameState.step="step2"; showScene();}],
+            ["Ask for the time", () => {gameState.step="step2"; showScene();}],
+            ["Comment on the book or item she’s holding", () => {gameState.step="step2"; showScene();}],
+            ["Mention something about the cafe atmosphere or music", () => {gameState.step="step2"; showScene();}],
+            ["Ask if she comes here often", () => {gameState.step="step2"; showScene();}],
+            ["Make a small observation about the weather", () => {gameState.step="step2"; showScene();}],
+            ["Smile and wave casually", () => {gameState.step="step2"; showScene();}]
         ]);
     }
 
-    // Goth intro follow-up
-    else if(gameState.step === "gothIntro") {
-        output.textContent = "Goth girl seems reserved. How do you continue?";
+    // Step2: first conversation exchange
+    else if(gameState.step === "step2") {
+        const conv2 = {
+            "Casual": "She smiles and responds warmly. Seems friendly and open to chat.",
+            "Goth": "She raises an eyebrow. 'Hmm.' Seems cautious, but listening.",
+            "Sporty": "She grins. 'Hey! Just finished my workout.' Energetic vibe.",
+            "Bookish": "She looks up from her book. 'Oh, hi! Are you into reading too?'",
+            "Artsy": "She nods at your comment, curious. 'I like talking about art.'",
+            "Tech": "She glances up briefly. 'Yeah?' Looks busy but polite."
+        };
+        output.textContent = conv2[gameState.personality] + "\nHow do you continue the conversation?";
         createChoices([
-            ["Ask about her favorite music", () => {gameState.step=6; output.textContent="She seems slightly more engaged."; showScene();}],
-            ["Comment on her style or accessories", () => {gameState.step=6; output.textContent="She smirks, intrigued."; showScene();}],
-            ["Mention a book or movie you like", () => {gameState.step=6; output.textContent="She nods thoughtfully."; showScene();}],
-            ["Respectfully back off", () => {gameState.step=5; showScene();}]
+            ["Ask about hobbies or interests", () => {gameState.step="step3"; showScene();}],
+            ["Comment on her surroundings or the cafe", () => {gameState.step="step3"; showScene();}],
+            ["Talk about your work/study briefly", () => {gameState.step="step3"; showScene();}],
+            ["Mention a small funny story", () => {gameState.step="step3"; showScene();}],
+            ["Ask about her favorite drink or snack", () => {gameState.step="step3"; showScene();}],
+            ["Talk about a recent event or news", () => {gameState.step="step3"; showScene();}],
+            ["Ask about pets or animals", () => {gameState.step="step3"; showScene();}],
+            ["Compliment her accessories or style", () => {gameState.step="step3"; showScene();}]
         ]);
     }
 
-    // Neutral start
-    else if(gameState.step === 4) {
-        output.textContent = "Neutral start. She gives a neutral response. How do you continue?";
+    // Step3: second conversation exchange
+    else if(gameState.step === "step3") {
+        const conv3 = {
+            "Casual": "She seems engaged and smiles more often. Conversation flowing nicely!",
+            "Goth": "She nods slowly, seems a bit more interested.",
+            "Sporty": "She laughs and keeps chatting with energy!",
+            "Bookish": "She talks animatedly about her interests in books.",
+            "Artsy": "She shows you a small sketch and talks about her art.",
+            "Tech": "She listens attentively and comments thoughtfully."
+        };
+        output.textContent = conv3[gameState.personality] + "\nDo you try to ask for her number?";
         createChoices([
-            ["Ask about her drink or food choice", 6],
-            ["Make small talk about surroundings", 6],
-            ["Ask about hobbies or recent activities", 6],
-            ["Smile and politely excuse yourself", 5],
-            ["Comment on the weather or day", 6],
-            ["Ask if she’s working or studying today", 6]
+            ["Ask politely for her number", attemptNumber],
+            ["Offer your number instead", attemptNumber],
+            ["Suggest continuing over coffee another day", attemptNumber],
+            ["Keep chatting for a bit more", () => {gameState.step="step3b"; showScene();}]
         ]);
     }
 
-    // Failed conversation
-    else if(gameState.step === 5) {
-        output.textContent = "You walked away. Game over.";
-        createChoices([["Restart", startGame]]);
-    }
-
-    // Step: trying to get the number
-    else if(gameState.step === 6) {
-        output.textContent = "The conversation is going well. Try to get her number?";
+    // Step3b: optional extra chat
+    else if(gameState.step === "step3b") {
+        output.textContent = "You continue the conversation, finding more common ground.";
         createChoices([
-            ["Directly ask for her number politely", attemptNumber],
-            ["Offer your number and say she can text anytime", attemptNumber],
-            ["Suggest continuing the conversation over coffee another time", attemptNumber],
-            ["Keep chatting for a few more minutes", increaseConfidence],
-            ["Mention an event or activity she might enjoy and invite her", attemptNumber],
-            ["Share an interesting article or topic and ask if she wants to discuss it later", attemptNumber]
+            ["Ask about hobbies again", attemptNumber],
+            ["Comment on surroundings or music", attemptNumber],
+            ["Talk about recent experiences", attemptNumber],
+            ["Mention a movie or book she might like", attemptNumber]
         ]);
     }
 
@@ -168,44 +177,7 @@ function showScene() {
     }
 }
 
-// Unique outcomes per initial choice
-function uniqueOutcome(action) {
-    let personality = gameState.personality;
-    switch(action) {
-        case "introGreet":
-            if(personality==="Goth") gameState.step="gothIntro";
-            else gameState.step=6;
-            break;
-        case "outfit":
-            if(personality==="Goth") gameState.step="gothIntro";
-            else gameState.step=6;
-            break;
-        case "time":
-            gameState.step=4;
-            break;
-        case "item":
-            if(personality==="Bookish") gameState.step=6;
-            else if(personality==="Tech") gameState.step=7;
-            else gameState.step=6;
-            break;
-        case "music":
-            if(personality==="Goth") gameState.step="gothIntro";
-            else gameState.step=6;
-            break;
-        case "frequent":
-            gameState.step=6;
-            break;
-        case "weather":
-            gameState.step=6;
-            break;
-        case "wave":
-            if(personality==="Goth") gameState.step="gothIntro";
-            else gameState.step=6;
-            break;
-    }
-    showScene();
-}
-
+// Functions
 function createChoices(options) {
     choicesDiv.innerHTML = "";
     options.forEach(opt => {
@@ -223,33 +195,29 @@ function createChoices(options) {
     });
 }
 
+// Attempt to get number
 function attemptNumber() {
-    let baseChance = { "Casual":45, "Goth":20, "Sporty":40, "Bookish":35, "Artsy":30, "Tech":40 }[gameState.personality];
-    let chance = baseChance + gameState.confidence;
-    if(Math.random()*100 < chance) gameState.step="schedule";
+    let baseChance = { "Casual":80, "Goth":30, "Sporty":70, "Bookish":60, "Artsy":55, "Tech":65 }[gameState.personality];
+    if(Math.random()*100 < baseChance) gameState.step="schedule";
     else gameState.step="fail";
     showScene();
 }
 
-function increaseConfidence() {
-    gameState.confidence += 20;
-    gameState.step = 6;
-    showScene();
-}
-
+// Schedule negotiation
 function negotiateSchedule() {
-    let baseChance = { "Casual":50, "Goth":30, "Sporty":45, "Bookish":40, "Artsy":35, "Tech":45 }[gameState.personality];
-    let chance = baseChance + gameState.confidence;
-    if(Math.random()*100 < chance) gameState.step="place";
+    let baseChance = { "Casual":90, "Goth":50, "Sporty":80, "Bookish":70, "Artsy":65, "Tech":75 }[gameState.personality];
+    if(Math.random()*100 < baseChance) gameState.step="place";
     else gameState.step="fail";
     showScene();
 }
 
+// Choose place
 function choosePlace() {
     gameState.step="place";
     showScene();
 }
 
+// Finish date
 function finishDate(choice) {
     gameState.datePlace = choice ? choice : event.target.textContent;
     gameState.step="success";
