@@ -2,230 +2,274 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Realistic Dating Conversation Game</title>
+<title>Approach Game</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #111; color: #eee; padding: 20px; }
-  #game { max-width: 700px; margin: auto; }
-  button { margin: 5px; padding: 10px; font-size: 1em; background: #222; color: #0ff; border: 1px solid #0ff; cursor: pointer; }
-  button:hover { background: #0ff; color: #111; }
-  #output { margin-bottom: 20px; white-space: pre-line; }
+    body { 
+        background: #111;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+    }
+    #game {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #222;
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .choice {
+        display: block;
+        background: #333;
+        color: #fff;
+        margin: 10px auto;
+        padding: 10px;
+        width: 80%;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        text-align: left;
+    }
+    .choice:hover {
+        background: #444;
+    }
+    h1 {
+        margin-bottom: 10px;
+    }
 </style>
 </head>
 <body>
-
 <div id="game">
-  <div id="output"></div>
-  <div id="choices"></div>
+    <h1>Confidence Simulator</h1>
+    <p id="output">Choose someone to talk to:</p>
+    <div id="choices"></div>
 </div>
 
 <script>
-let gameState = {
-    step: "choosePersonality",
-    personality: "",
-    number: false,
-    dateTime: "",
-    datePlace: ""
-};
+// Personality roster
+const girls = [
+    { id: 1, name: "Casual" },
+    { id: 2, name: "Goth" },
+    { id: 3, name: "Sporty" },
+    { id: 4, name: "Bookish" },
+    { id: 5, name: "Artsy" },
+    { id: 6, name: "Tech-Savvy" },
+    { id: 7, name: "E-Girl" }
+];
 
-const output = document.getElementById("output");
-const choicesDiv = document.getElementById("choices");
+const output = document.getElementById('output');
+const choicesDiv = document.getElementById('choices');
+let currentGirl = null;
 
-function startGame() {
-    gameState = { step: "choosePersonality", personality: "", number: false, dateTime: "", datePlace: "" };
-    showScene();
-}
-
-function showScene() {
+// Initial girl select
+function showGirlSelection() {
+    output.textContent = "Who are you approaching?";
     choicesDiv.innerHTML = "";
-
-    // Step 0: Choose girl
-    if(gameState.step === "choosePersonality") {
-        output.textContent = "Choose a girl to approach:";
-        createChoices([
-            ["Casual Coffee Chick", () => {gameState.personality="Casual"; gameState.step="step1"; showScene();}],
-            ["Goth Girl", () => {gameState.personality="Goth"; gameState.step="step1"; showScene();}],
-            ["Sporty Girl", () => {gameState.personality="Sporty"; gameState.step="step1"; showScene();}],
-            ["Bookish Girl", () => {gameState.personality="Bookish"; gameState.step="step1"; showScene();}],
-            ["Artsy Girl", () => {gameState.personality="Artsy"; gameState.step="step1"; showScene();}],
-            ["Tech-savvy Girl", () => {gameState.personality="Tech"; gameState.step="step1"; showScene();}]
-        ]);
-    }
-
-    // Step1: initial approach
-    else if(gameState.step === "step1") {
-        const intro = {
-            "Casual": "You see a friendly girl at the coffee shop. She smiles as she sips her latte.",
-            "Goth": "A mysterious goth girl sits alone in the corner, headphones in. She notices you looking.",
-            "Sporty": "A sporty girl stretches by the cafe window, energetic and alert.",
-            "Bookish": "A girl is reading a thick book, glasses perched on her nose.",
-            "Artsy": "A girl is sketching in her notebook, surrounded by colorful art supplies.",
-            "Tech": "A girl is typing away on a laptop, wearing earbuds, focused."
-        };
-        output.textContent = intro[gameState.personality] + "\nHow do you approach her?";
-        createChoices([
-            ["Say hello and introduce yourself", () => {gameState.step="step2"; showScene();}],
-            ["Compliment her outfit politely", () => {gameState.step="step2"; showScene();}],
-            ["Ask for the time", () => {gameState.step="step2"; showScene();}],
-            ["Comment on the book or item she’s holding", () => {gameState.step="step2"; showScene();}],
-            ["Mention something about the cafe atmosphere or music", () => {gameState.step="step2"; showScene();}],
-            ["Ask if she comes here often", () => {gameState.step="step2"; showScene();}],
-            ["Make a small observation about the weather", () => {gameState.step="step2"; showScene();}],
-            ["Smile and wave casually", () => {gameState.step="step2"; showScene();}]
-        ]);
-    }
-
-    // Step2: first conversation exchange
-    else if(gameState.step === "step2") {
-        const conv2 = {
-            "Casual": "She smiles and responds warmly. Seems friendly and open to chat.",
-            "Goth": "She raises an eyebrow. 'Hmm.' Seems cautious, but listening.",
-            "Sporty": "She grins. 'Hey! Just finished my workout.' Energetic vibe.",
-            "Bookish": "She looks up from her book. 'Oh, hi! Are you into reading too?'",
-            "Artsy": "She nods at your comment, curious. 'I like talking about art.'",
-            "Tech": "She glances up briefly. 'Yeah?' Looks busy but polite."
-        };
-        output.textContent = conv2[gameState.personality] + "\nHow do you continue the conversation?";
-        createChoices([
-            ["Ask about hobbies or interests", () => {gameState.step="step3"; showScene();}],
-            ["Comment on her surroundings or the cafe", () => {gameState.step="step3"; showScene();}],
-            ["Talk about your work/study briefly", () => {gameState.step="step3"; showScene();}],
-            ["Mention a small funny story", () => {gameState.step="step3"; showScene();}],
-            ["Ask about her favorite drink or snack", () => {gameState.step="step3"; showScene();}],
-            ["Talk about a recent event or news", () => {gameState.step="step3"; showScene();}],
-            ["Ask about pets or animals", () => {gameState.step="step3"; showScene();}],
-            ["Compliment her accessories or style", () => {gameState.step="step3"; showScene();}]
-        ]);
-    }
-
-    // Step3: second conversation exchange
-    else if(gameState.step === "step3") {
-        const conv3 = {
-            "Casual": "She seems engaged and smiles more often. Conversation flowing nicely!",
-            "Goth": "She nods slowly, seems a bit more interested.",
-            "Sporty": "She laughs and keeps chatting with energy!",
-            "Bookish": "She talks animatedly about her interests in books.",
-            "Artsy": "She shows you a small sketch and talks about her art.",
-            "Tech": "She listens attentively and comments thoughtfully."
-        };
-        output.textContent = conv3[gameState.personality] + "\nDo you try to ask for her number?";
-        createChoices([
-            ["Ask politely for her number", attemptNumber],
-            ["Offer your number instead", attemptNumber],
-            ["Suggest continuing over coffee another day", attemptNumber],
-            ["Keep chatting for a bit more", () => {gameState.step="step3b"; showScene();}]
-        ]);
-    }
-
-    // Step3b: optional extra chat
-    else if(gameState.step === "step3b") {
-        output.textContent = "You continue the conversation, finding more common ground.";
-        createChoices([
-            ["Ask about hobbies again", attemptNumber],
-            ["Comment on surroundings or music", attemptNumber],
-            ["Talk about recent experiences", attemptNumber],
-            ["Mention a movie or book she might like", attemptNumber]
-        ]);
-    }
-
-    // Step: schedule (time negotiation)
-    else if(gameState.step === "schedule") {
-        const suggestTime = ["Casual","Bookish","Artsy","Tech"];
-        const askUserTime = ["Goth","Sporty"];
-        if(suggestTime.includes(gameState.personality)) {
-            output.textContent = "She suggests a time for the date. Do you accept?";
-            createChoices([
-                ["Yes, that works for me", () => {gameState.dateTime="Her suggested time"; gameState.step="place"; showScene();}],
-                ["Suggest a different time", negotiateSchedule],
-                ["Ask what other time works for her", negotiateSchedule],
-                ["Ignore the message", "fail"]
-            ]);
-        } else if(askUserTime.includes(gameState.personality)) {
-            output.textContent = "She asks you to suggest a time. Which do you choose?";
-            createChoices([
-                ["10 AM", choosePlace],
-                ["2 PM", choosePlace],
-                ["6 PM", choosePlace],
-                ["8 PM", choosePlace],
-                ["I'm good with whatever", choosePlace]
-            ]);
-        }
-    }
-
-    // Step: choose place
-    else if(gameState.step === "place") {
-        output.textContent = "Now decide on a place for the date:";
-        createChoices([
-            ["Coffee shop", finishDate],
-            ["Casual restaurant", finishDate],
-            ["Park or outdoor location", finishDate],
-            ["Museum or gallery", finishDate],
-            ["Bookstore", finishDate],
-            ["Cafe with live music", finishDate]
-        ]);
-    }
-
-    // Step: success
-    else if(gameState.step === "success") {
-        output.textContent = `You successfully set up a date at ${gameState.datePlace} at ${gameState.dateTime || 'the chosen time'}! Congratulations!`;
-        createChoices([["Play again", startGame]]);
-    }
-
-    else if(gameState.step === "fail") {
-        output.textContent = "She lost interest. Game over.";
-        createChoices([["Restart", startGame]]);
-    }
-}
-
-// Functions
-function createChoices(options) {
-    choicesDiv.innerHTML = "";
-    options.forEach(opt => {
+    girls.forEach(g => {
         const btn = document.createElement("button");
-        btn.textContent = opt[0];
-        btn.onclick = () => {
-            if(typeof opt[1] === "number" || typeof opt[1] === "string") {
-                gameState.step = opt[1];
-                showScene();
-            } else if(typeof opt[1] === "function") {
-                opt[1]();
-            }
-        };
+        btn.className = "choice";
+        btn.textContent = g.name;
+        btn.onclick = () => startConversation(g.id);
         choicesDiv.appendChild(btn);
     });
 }
 
-// Attempt to get number
-function attemptNumber() {
-    let baseChance = { "Casual":80, "Goth":30, "Sporty":70, "Bookish":60, "Artsy":55, "Tech":65 }[gameState.personality];
-    if(Math.random()*100 < baseChance) gameState.step="schedule";
-    else gameState.step="fail";
-    showScene();
+function startConversation(girlID) {
+    currentGirl = girlID;
+    output.textContent = `You approach the ${girls.find(g=>g.id===girlID).name} girl. What do you do?`;
+    showChoices(girlID, 1);
 }
 
-// Schedule negotiation
-function negotiateSchedule() {
-    let baseChance = { "Casual":90, "Goth":50, "Sporty":80, "Bookish":70, "Artsy":65, "Tech":75 }[gameState.personality];
-    if(Math.random()*100 < baseChance) gameState.step="place";
-    else gameState.step="fail";
-    showScene();
+// Core branching logic
+function handleChoice(girlID, choiceID) {
+    const g = girls.find(g=>g.id===girlID).name;
+    let text = "";
+    let nextStart = null;
+
+    // --- CASUAL GIRL ---
+    if (girlID === 1) {
+        if (choiceID === 1) { text = "She smiles warmly — easygoing vibe."; nextStart = 9; }
+        else if (choiceID === 2) { text = "She laughs at your joke."; nextStart = 9; }
+        else if (choiceID === 9) { text = "She leans in a little — seems comfy talking."; nextStart = 17; }
+        else if (choiceID === 10) { text = "She shrugs playfully, clearly enjoying this."; nextStart = 17; }
+        else if (choiceID === 17) { text = "She gives you her number casually."; return showScheduleOptions(); }
+        else if (choiceID === 18) { text = "She teases you before agreeing to share her number."; return showScheduleOptions(); }
+    }
+
+    // --- GOTH GIRL ---
+    if (girlID === 2) {
+        if (choiceID === 1) { text = "She nods, intrigued by your confidence."; nextStart = 9; }
+        else if (choiceID === 2) { text = "She raises a brow — not impressed, but listening."; nextStart = 9; }
+        else if (choiceID === 9) { text = "She smirks faintly, folding her arms."; nextStart = 17; }
+        else if (choiceID === 10) { text = "She tilts her head, clearly sizing you up."; nextStart = 17; }
+        else if (choiceID === 17) { text = "She slides her number across her phone screen to you."; return showScheduleOptions(); }
+        else if (choiceID === 18) { text = "She reluctantly gives her number after a small debate."; return showScheduleOptions(); }
+    }
+
+    // --- SPORTY GIRL ---
+    if (girlID === 3) {
+        if (choiceID === 1) { text = "She laughs — competitive energy already."; nextStart = 9; }
+        else if (choiceID === 2) { text = "She nods like she respects the hustle."; nextStart = 9; }
+        else if (choiceID === 9) { text = "She flexes a little jokingly."; nextStart = 17; }
+        else if (choiceID === 10) { text = "She talks about her next match."; nextStart = 17; }
+        else if (choiceID === 17) { text = "She tosses you her number like it's nothing."; return showScheduleOptions(); }
+        else if (choiceID === 18) { text = "She pretends to hesitate, then grins and gives it."; return showScheduleOptions(); }
+    }
+
+    // --- BOOKISH GIRL ---
+    if (girlID === 4) {
+        if (choiceID === 1) { text = "She pushes her glasses up and listens carefully."; nextStart = 9; }
+        else if (choiceID === 2) { text = "She gives a shy smile."; nextStart = 9; }
+        else if (choiceID === 9) { text = "She quotes a book line at you."; nextStart = 17; }
+        else if (choiceID === 10) { text = "She actually seems engaged."; nextStart = 17; }
+        else if (choiceID === 17) { text = "She nervously gives you her number."; return showScheduleOptions(); }
+        else if (choiceID === 18) { text = "She hands you a sticky note with her digits."; return showScheduleOptions(); }
+    }
+
+    // --- ARTSY GIRL ---
+    if (girlID === 5) {
+        if (choiceID === 1) { text = "She twirls a paintbrush like a baton."; nextStart = 9; }
+        else if (choiceID === 2) { text = "She sketches you with her eyes — probably drawing you later."; nextStart = 9; }
+        else if (choiceID === 9) { text = "She starts talking about her favorite mediums."; nextStart = 17; }
+        else if (choiceID === 10) { text = "She hums softly — clearly vibing."; nextStart = 17; }
+        else if (choiceID === 17) { text = "She gives you her number in a doodled heart."; return showScheduleOptions(); }
+        else if (choiceID === 18) { text = "She draws your number request into a cartoon, then says yes."; return showScheduleOptions(); }
+    }
+
+    // --- TECH-SAVVY GIRL ---
+    if (girlID === 6) {
+        if (choiceID === 1) { text = "She nods analytically — like she's scanning your specs."; nextStart = 9; }
+        else if (choiceID === 2) { text = "She laughs awkwardly, but doesn’t run."; nextStart = 9; }
+        else if (choiceID === 9) { text = "She mentions a favorite game engine."; nextStart = 17; }
+        else if (choiceID === 10) { text = "She starts nerding out."; nextStart = 17; }
+        else if (choiceID === 17) { text = "She gives you her Discord first, then number."; return showScheduleOptions(); }
+        else if (choiceID === 18) { text = "She DM’s you mid-convo with her number."; return showScheduleOptions(); }
+    }
+
+    // --- E-GIRL ---
+    if (girlID === 7) {
+        if (choiceID === 1) { text = "She gives you a mischievous grin."; nextStart = 9; }
+        else if (choiceID === 2) { text = "She mimics your tone back, giggling."; nextStart = 9; }
+        else if (choiceID === 9) { text = "She talks about a weird meme."; nextStart = 17; }
+        else if (choiceID === 10) { text = "She admits she games too much."; nextStart = 17; }
+        else if (choiceID === 17) { text = "She gives you her number with a weirdly specific pet name."; return showScheduleOptions(); }
+        else if (choiceID === 18) { text = "She just blurts out her number and laughs."; return showScheduleOptions(); }
+    }
+
+    if (text) {
+        output.textContent = text;
+        if (nextStart) showChoices(girlID, nextStart);
+    }
 }
 
-// Choose place
-function choosePlace() {
-    gameState.step="place";
-    showScene();
+// Choice bank
+function showChoices(girlID, startChoice) {
+    choicesDiv.innerHTML = "";
+    let labels = [];
+
+    // initial layer (1-8)
+    if (startChoice === 1) {
+        labels = [
+            "Say something funny",
+            "Compliment her",
+            "Ask a casual question",
+            "Make an observation",
+            "Comment on something nearby",
+            "Be direct",
+            "Ask how her day’s going",
+            "Say hi confidently"
+        ];
+        labels.forEach((lbl,i)=>{
+            const btn = document.createElement("button");
+            btn.className = "choice";
+            btn.textContent = lbl;
+            btn.onclick = ()=>handleChoice(girlID, i+1);
+            choicesDiv.appendChild(btn);
+        });
+    }
+
+    // second layer (9-16)
+    if (startChoice === 9) {
+        labels = [
+            "Follow up on something she said",
+            "Make a small joke",
+            "Ask about hobbies",
+            "Share something personal",
+            "Flatter her outfit",
+            "Talk about something random",
+            "Ask an open question",
+            "Light tease (friendly)"
+        ];
+        labels.forEach((lbl,i)=>{
+            const btn = document.createElement("button");
+            btn.className = "choice";
+            btn.textContent = lbl;
+            btn.onclick = ()=>handleChoice(girlID, i+9);
+            choicesDiv.appendChild(btn);
+        });
+    }
+
+    // third layer (17-24)
+    if (startChoice === 17) {
+        labels = [
+            "Ask for her number confidently",
+            "Joke your way into the number",
+            "Mention hanging out sometime",
+            "Say you'd like to see her again",
+            "Propose an activity",
+            "Be playful",
+            "Ask chill",
+            "Smile and ask"
+        ];
+        labels.forEach((lbl,i)=>{
+            const btn = document.createElement("button");
+            btn.className = "choice";
+            btn.textContent = lbl;
+            btn.onclick = ()=>handleChoice(girlID, i+17);
+            choicesDiv.appendChild(btn);
+        });
+    }
 }
 
-// Finish date
-function finishDate(choice) {
-    gameState.datePlace = choice ? choice : event.target.textContent;
-    gameState.step="success";
-    showScene();
+// Schedule picking
+function showScheduleOptions() {
+    output.textContent = "She agrees! When do you want to meet up?";
+    choicesDiv.innerHTML = "";
+    const times = ["Friday night", "Saturday afternoon", "Sunday evening", "I'm good with whatever"];
+    times.forEach(t=>{
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.textContent = t;
+        btn.onclick = ()=>showLocationOptions(t);
+        choicesDiv.appendChild(btn);
+    });
 }
 
-startGame();
+// Location picking
+function showLocationOptions(time) {
+    output.textContent = `Nice, ${time} works. Where are you taking her?`;
+    choicesDiv.innerHTML = "";
+    const places = ["Coffee shop", "Park walk", "Arcade", "Dinner spot", "Bookstore", "Gallery", "Surprise plan"];
+    places.forEach(p=>{
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.textContent = p;
+        btn.onclick = ()=>endGame(p, time);
+        choicesDiv.appendChild(btn);
+    });
+}
+
+function endGame(place, time) {
+    output.textContent = `She smiles and agrees to meet you at the ${place} on ${time}. Mission accomplished.`;
+    choicesDiv.innerHTML = "";
+    const restart = document.createElement("button");
+    restart.className = "choice";
+    restart.textContent = "Play Again";
+    restart.onclick = showGirlSelection;
+    choicesDiv.appendChild(restart);
+}
+
+showGirlSelection();
 </script>
-
 </body>
 </html>
